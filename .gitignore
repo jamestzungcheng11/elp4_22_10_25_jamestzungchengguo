@@ -1,0 +1,10 @@
+# Ignorar arquivos de banco de dados do SQL Server
+*.mdf
+*.ldf
+
+# Ignorar arquivos de usu rio do Visual Studio
+*.user
+
+# Ignorar pastas de build
+bin/
+obj/
