@@ -16,7 +16,7 @@ namespace PaisesEstadosCidades
 
 		Cidades ocidades;
         CtrlCidades aCtrlCidades;
-
+        CtrlEstados aCtrlEstados;
 
 
 		public FrmCadastrosCidades()
@@ -38,6 +38,7 @@ namespace PaisesEstadosCidades
 
             
             ocidades.Ddd = txtDdd.Text;
+            MessageBox.Show(aCtrlCidades.Salvar(ocidades));
 
             //aCtrl.Salvar(ocidades);
             
@@ -53,7 +54,26 @@ namespace PaisesEstadosCidades
 
 
         }
-    
+        //public override void Salvar()
+        //{
+            //if(MessageDlg("Confirma(S/N)="S)
+
+
+
+            //opais.Codigo = Convert.ToInt32(txtCodigo.Text);
+
+            //opais.Pais = txtPais.Text;
+            //opais.Sigla = txtSigla.Text;
+            //opais.Ddi = txtDdi.Text;
+            //opais.Moeda = txtMoeda.Text;
+            //MessageBox.Show(aCtrlPaises.Salvar(opais));
+
+
+            //aCtrl.Salvar(opais);
+
+        //}
+
+
 
         public override void CarregaTxt()
         {
@@ -122,7 +142,7 @@ namespace PaisesEstadosCidades
         {
             string btnasair = ofrmConsultaEstados.btnSair.Text;
             ofrmConsultaEstados.btnSair.Text = "selecionar";
-            ofrmConsultaEstados.ConhecaObj(ocidades.Oestados, aCtrlCidades);
+            ofrmConsultaEstados.ConhecaObj(ocidades.Oestados, aCtrlEstados);
             ofrmConsultaEstados.ShowDialog();
             this.txtCodEstados.Text = Convert.ToString(ocidades.Oestados.Codigo);
             this.txtEstados.Text = ocidades.Oestados.Estado.ToString();

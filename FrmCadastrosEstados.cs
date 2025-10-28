@@ -15,7 +15,7 @@ namespace PaisesEstadosCidades
 		FrmCadastrosEstados ofrmCadastroEstados;
         CtrlEstados aCtrlEstados;
 
-
+        CtrlPaises aCtrlPaises;
 
 		public FrmCadastrosEstados()
 		{
@@ -33,9 +33,9 @@ namespace PaisesEstadosCidades
             oEstado.Estado = txtEstado.Text;
             oEstado.Uf=txtUF.Text;
             oEstado.Opais.Pais = txtPais.Text;
-            
+            MessageBox.Show(aCtrlEstados.Salvar(oEstado));
 
-            
+
         }
 
         
@@ -102,7 +102,7 @@ namespace PaisesEstadosCidades
 			string btnSair = ofrmConsultaPaises.btnSair.Text;
 			ofrmConsultaPaises.btnSair.Text = "selecionar";
 
-			ofrmConsultaPaises.ConhecaObj(oEstado.Opais, aCtrlEstados);
+			ofrmConsultaPaises.ConhecaObj(oEstado.Opais, aCtrlPaises);
 			ofrmConsultaPaises.ShowDialog();
 			this.txtCodPais.Text=Convert.ToString(oEstado.Opais.Codigo);
 			this.txtPais.Text=oEstado.Opais.Pais.ToString();

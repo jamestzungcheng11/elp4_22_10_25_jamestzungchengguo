@@ -33,19 +33,10 @@
             this.colCodigoCidades = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colDDD = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
-            // 
-            // BtnIncluir
-            // 
-            this.BtnIncluir.Click += new System.EventHandler(this.BtnIncluir_Click);
-            // 
-            // BtnAlterar
-            // 
-            this.BtnAlterar.Click += new System.EventHandler(this.BtnAlterar_Click);
-            // 
-            // BtnExcluir
-            // 
-            this.BtnExcluir.Click += new System.EventHandler(this.BtnExcluir_Click);
-            // 
+             
+             //BtnIncluir
+           
+          
             // BtnPesquisar
             // 
             this.BtnPesquisar.Click += new System.EventHandler(this.BtnPesquisar_Click);

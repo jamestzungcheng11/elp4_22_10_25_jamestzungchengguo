@@ -10,9 +10,6 @@ namespace PaisesEstadosCidades
     {
         ColecoesEstados aColEstados;
         DaoEstados aDaoestados;
-        ColecoesPaises acolpais;
-  
-   
 
         public CtrlEstados()
         {
@@ -20,19 +17,9 @@ namespace PaisesEstadosCidades
             aDaoestados = new DaoEstados();
         }
 
-
-
         public override string Salvar(object obj)
         {
-
             return aDaoestados.Salvar(obj);
-
-
-
-
-
         }
-
-
     }
 }

@@ -82,18 +82,18 @@ namespace PaisesEstadosCidades
       
         private void BtnIncluir_Click(object sender, EventArgs e)
         {
-            Incluir();
+            //Incluir();
         }
 
         private void BtnAlterar_Click(object sender, EventArgs e)
         {
-            Alterar();
+            //Alterar();
         }
 
         private void BtnExcluir_Click(object sender, EventArgs e)
         {
-            Excluir();
-        }
+            //Excluir();
+         }
 
         private void btnSair_Click(object sender, EventArgs e)
         {
