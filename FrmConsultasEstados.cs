@@ -43,18 +43,40 @@ namespace PaisesEstadosCidades
             
         }
      
+        //protected override void CarregaLV()
+        //{
+
+            //foreach (var oestado in aCtrlEstados.Listar())
+            //{
+                //ListViewItem item = new ListViewItem(Convert.ToString(oEstado.Codigo));
+                //item.SubItems.Add(oEstado.Estado);
+                //item.SubItems.Add(oEstado.Uf);
+
+                //item.SubItems.Add(Convert.ToString(oEstado.Opais.Codigo));
+
+                //item.SubItems.Add(oEstado.Opais.Pais);
+
+                //ListV.Items.Add(item);
+            //}
+                
+        //}
         protected override void CarregaLV()
         {
-            ListViewItem item = new ListViewItem(Convert.ToString(oEstado.Codigo));
-            item.SubItems.Add(oEstado.Estado);
-            item.SubItems.Add(oEstado.Uf);
-        
-            item.SubItems.Add(Convert.ToString(oEstado.Opais.Codigo));
+            ListV.Items.Clear(); // sempre limpe antes
 
-            item.SubItems.Add(oEstado.Opais.Pais);
+            foreach (var oestado in aCtrlEstados.Listar())
+            {
+                ListViewItem item = new ListViewItem(oestado.Codigo.ToString());
+                item.SubItems.Add(oestado.Estado);
+                item.SubItems.Add(oestado.Uf);
 
-            ListV.Items.Add(item);
+                item.SubItems.Add(oestado.Opais.Codigo.ToString());
+                item.SubItems.Add(oestado.Opais.Pais);
+
+                ListV.Items.Add(item);
+            }
         }
+
         protected override void Sair()
         {
            

@@ -50,7 +50,7 @@ namespace PaisesEstadosCidades
 
         protected override void CarregaLV()
         {
-            //foreach(var opais in CtrlPaises.TodosPaises)
+            foreach(var opais in aCtrlPaises.Listar())
             {
                 ListViewItem item = new ListViewItem(Convert.ToString(opais.Codigo));
                 item.SubItems.Add(opais.Pais);
@@ -81,6 +81,8 @@ namespace PaisesEstadosCidades
 
             ofrmCadastroPaises.ShowDialog();
             ofrmCadastroPaises.DesbloquearTxt();
+            ListV.Items.Clear();
+            this.CarregaLV();
         }
 
         protected override void Pesquisar()
@@ -106,6 +108,11 @@ namespace PaisesEstadosCidades
         }
 
         private void ListV_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnExcluir_Click(object sender, EventArgs e)
         {
 
         }

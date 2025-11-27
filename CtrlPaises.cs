@@ -31,6 +31,27 @@ namespace PaisesEstadosCidades
 
         }
 
-       
+       public override List<Paises> Listar()
+        {
+            return aDaoPaises.Listar();
+        }
+
+        public override string Excluir(object obj)
+        {
+            return aDaoPaises.Excluir(obj);
+        }
+        public override object CarregaObj(int chave)
+        {
+            return aDaoPaises.CarregaObj(chave);
+        }
+        public override List<Paises> Pesquisar<Paises>(string chave)
+        {
+            return aDaoPaises.Pesquisar<Paises>(chave);
+        }
+
+
+
+
+
     }
 }

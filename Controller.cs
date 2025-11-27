@@ -28,7 +28,7 @@ namespace PaisesEstadosCidades
             
         }
 
-        public virtual List<Object> Listar()
+        public virtual List<T> Listar()
         {
             return null;
 
@@ -39,7 +39,7 @@ namespace PaisesEstadosCidades
             return null;
         }
 
-        public virtual List<T>Pesquisar(string chave)
+        public virtual List<T>Pesquisar<T>(string chave)
         {
             return null;
 

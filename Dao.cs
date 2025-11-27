@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PaisesEstadosCidades
 {
-    internal class Dao
+    internal class Dao<T>
     {
         protected SqlConnection cnn;
         public Dao()
@@ -27,7 +27,7 @@ namespace PaisesEstadosCidades
             return null;
 
         }
-        public virtual List<T> Listar<T>()
+        public virtual List<T> Listar()
         {
             return null;
         }

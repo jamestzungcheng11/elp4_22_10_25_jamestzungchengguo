@@ -1,28 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PaisesEstadosCidades
 {
-    class DaoPaises:Dao
+    class DaoPaises : Dao<Paises>
     {
-
-        public override string  Excluir(object obj)
+        public override string Excluir(object obj)
         {
-            return null; 
+            Paises opais = (Paises)obj;
+            string mOk = "";
 
+            using (SqlConnection cnn = Banco.Abrir())
+            {
+                try
+                {
+                    string msql = "DELETE FROM paises WHERE id=@id";
+                    using (SqlCommand cmd = new SqlCommand(msql, cnn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", opais.Codigo);
+                        int linhas = cmd.ExecuteNonQuery();
+
+                        if (linhas > 0)
+                            mOk = "Registro excluído com sucesso.";
+                        else
+                            mOk = "Registro não encontrado.";
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    if (ex.Number == 547)
+                    {
+                        mOk = "Não é possível excluir o País. Existem Estados ou Cidades cadastrados que dependem dele.";
+                    }
+                    else
+                    {
+                        mOk = "Erro de exclusão no banco de dados: " + ex.Message;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    mOk = "Erro inesperado ao tentar excluir: " + ex.Message;
+                }
+            }
+
+            return mOk;
         }
-       
+
         public override string Salvar(object obj)
         {
             Paises opais = (Paises)obj;
             string msql = "";
             string mOk = "";
 
-            // Abre conexão
             using (SqlConnection cnn = Banco.Abrir())
             {
                 if (opais.Codigo == 0)
@@ -33,7 +63,7 @@ namespace PaisesEstadosCidades
                 else
                 {
                     msql = "UPDATE paises SET Pais=@Pais, Sigla=@Sigla, DDI=@DDI, Moeda=@Moeda, " +
-                           "DatCad=@DatCad, UltAlt=@UltAlt WHERE Codigo=@Codigo";
+                           "DatCad=@DatCad, UltAlt=@UltAlt WHERE id=@Codigo";
                 }
 
                 using (SqlCommand cmd = new SqlCommand(msql, cnn))
@@ -48,7 +78,6 @@ namespace PaisesEstadosCidades
 
                     cmd.ExecuteNonQuery();
 
-                    // Se for inserção, pega o ID gerado
                     if (opais.Codigo == 0)
                     {
                         cmd.CommandText = "SELECT @@IDENTITY";
@@ -64,14 +93,115 @@ namespace PaisesEstadosCidades
             return mOk;
         }
 
+        public override List<Paises> Listar()
+        {
+            List<Paises> lista = new List<Paises>();
+
+            using (SqlConnection cnn = Banco.Abrir())
+            {
+                string msql = "SELECT id, pais, sigla, ddi, moeda, DatCad, UltAlt FROM paises ORDER BY pais";
+
+                using (SqlCommand cmd = new SqlCommand(msql, cnn))
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Paises op = new Paises();
+                        op.Codigo = Convert.ToInt32(dr["id"]);
+                        op.Pais = dr["pais"].ToString();
+                        op.Sigla = dr["sigla"].ToString();
+                        op.Ddi = dr["ddi"].ToString();
+                        op.Moeda = dr["moeda"].ToString();
+                        op.Datcad = Convert.ToDateTime(dr["DatCad"]);
+
+                        if (dr["UltAlt"] != DBNull.Value)
+                            op.Ultalt = Convert.ToDateTime(dr["UltAlt"]);
+                        else
+                            op.Ultalt = DateTime.MinValue;
+
+                        lista.Add(op);
+                    }
+                }
+            }
+
+            return lista;
+        }
+
         public override Object CarregaObj(int chave)
         {
-            return null;
+            Paises op = null;
+
+            using (SqlConnection cnn = Banco.Abrir())
+            {
+                string msql = "SELECT id, pais, sigla, ddi, moeda, DatCad, UltAlt FROM paises WHERE id=@id";
+
+                using (SqlCommand cmd = new SqlCommand(msql, cnn))
+                {
+                    cmd.Parameters.AddWithValue("@id", chave);
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            op = new Paises();
+                            op.Codigo = Convert.ToInt32(dr["id"]);
+                            op.Pais = dr["pais"].ToString();
+                            op.Sigla = dr["sigla"].ToString();
+                            op.Ddi = dr["ddi"].ToString();
+                            op.Moeda = dr["moeda"].ToString();
+                            op.Datcad = Convert.ToDateTime(dr["DatCad"]);
+
+                            if (dr["UltAlt"] != DBNull.Value)
+                                op.Ultalt = Convert.ToDateTime(dr["UltAlt"]);
+                            else
+                                op.Ultalt = DateTime.MinValue;
+                        }
+                    }
+                }
+            }
+
+            return op;
         }
-        public override List<T>Pesquisar<T>(string  chave)
+
+        public override List<T> Pesquisar<T>(string chave)
         {
-            return null;
+            List<T> lista = new List<T>();
+
+            using (SqlConnection cnn = Banco.Abrir())
+            {
+                string msql = "SELECT id, pais, sigla, ddi, moeda, DatCad, UltAlt FROM paises " +
+                              "WHERE pais LIKE @chave ORDER BY pais";
+
+                using (SqlCommand cmd = new SqlCommand(msql, cnn))
+                {
+                    cmd.Parameters.AddWithValue("@chave", "%" + chave + "%");
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            Paises op = new Paises();
+                            op.Codigo = Convert.ToInt32(dr["id"]);
+                            op.Pais = dr["pais"].ToString();
+                            op.Sigla = dr["sigla"].ToString();
+                            op.Ddi = dr["ddi"].ToString();
+                            op.Moeda = dr["moeda"].ToString();
+                            op.Datcad = Convert.ToDateTime(dr["DatCad"]);
+
+                            if (dr["UltAlt"] != DBNull.Value)
+                                op.Ultalt = Convert.ToDateTime(dr["UltAlt"]);
+                            else
+                                op.Ultalt = DateTime.MinValue;
+
+                            lista.Add((T)(object)op);
+                        }
+                    }
+                }
+            }
+
+            return lista;
         }
+
 
     }
 }

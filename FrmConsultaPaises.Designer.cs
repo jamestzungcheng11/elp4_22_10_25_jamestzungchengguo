@@ -34,6 +34,10 @@
             this.colMoedas = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
+            // BtnExcluir
+            // 
+            this.BtnExcluir.Click += new System.EventHandler(this.BtnExcluir_Click);
+            // 
             // ListV
             // 
             this.ListV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {

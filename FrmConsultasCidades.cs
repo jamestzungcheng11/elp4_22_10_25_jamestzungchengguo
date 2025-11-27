@@ -38,14 +38,18 @@ namespace PaisesEstadosCidades
        
         protected override void CarregaLV()
         {
-            //foreach (var opais in CtrlPaises.TodosPaises)
-            ListViewItem item = new ListViewItem(Convert.ToString(ocidade.Codigo));
-            item.SubItems.Add(ocidade.Cidade);
-            item.SubItems.Add(ocidade.Oestados.Estado);
-            item.SubItems.Add(Convert.ToString(ocidade.Oestados.Codigo));
-            item.SubItems.Add(ocidade.Ddd);
+           
+             foreach (var ocidades in aCtrlCidades.Listar())
+            {
+                ListViewItem item = new ListViewItem(Convert.ToString(ocidade.Codigo));
+                item.SubItems.Add(ocidade.Cidade);
+                item.SubItems.Add(ocidade.Oestados.Estado);
+                item.SubItems.Add(Convert.ToString(ocidade.Oestados.Codigo));
+                item.SubItems.Add(ocidade.Ddd);
 
-            ListV.Items.Add(item);
+                ListV.Items.Add(item);
+            }
+           
         }
         public override void setFrmCadastros(Object Obj)
         {
@@ -82,18 +86,18 @@ namespace PaisesEstadosCidades
       
         private void BtnIncluir_Click(object sender, EventArgs e)
         {
-            Incluir();
+            //Incluir();
         }
 
         private void BtnAlterar_Click(object sender, EventArgs e)
         {
-            Alterar();
+            //Alterar();
         }
 
         private void BtnExcluir_Click(object sender, EventArgs e)
         {
-            Excluir();
-        }
+            //Excluir();
+         }
 
         private void btnSair_Click(object sender, EventArgs e)
         {

@@ -1,101 +1,213 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
+using System;
+
 
 namespace PaisesEstadosCidades
 {
-    class DaoEstados : Dao
+    class DaoEstados : Dao<Estados>
     {
         public override string Excluir(object obj)
         {
-            // Lógica de exclusão iria aqui (ou permanece como null/não implementada por enquanto)
-            return null;
-        }
-
-        public override string Salvar(object obj)
-        {
-            Estados oestado = (Estados)obj;
-            string msql = "";
+            Estados est = (Estados)obj;
             string mOk = "";
 
-            try
+            using (SqlConnection cnn = Banco.Abrir())
             {
-                using (SqlConnection cnn = Banco.Abrir())
+                try
                 {
-                    if (oestado.Codigo == 0) // Inserção
-                    {
-                        // CORREÇÃO ESSENCIAL: Omitimos "Id", "DatCad" e "UltAlt"
-                        // O banco gera o ID e o "DatCad" (devido ao DEFAULT GETDATE())
-                        msql = "INSERT INTO estados (estados, uf, idpais) " +
-                               "VALUES (@Estados, @UF, @idpais)";
-                    }
-                    else // Atualização
-                    {
-                        // O UPDATE define UltAlt com a hora atual do banco
-                        msql = "UPDATE estados SET estados=@Estados, uf=@UF, idpais=@idpais, " +
-                               "UltAlt=GETDATE() WHERE id=@Codigo";
-                    }
-
+                    string msql = "DELETE FROM estados WHERE id=@id";
                     using (SqlCommand cmd = new SqlCommand(msql, cnn))
                     {
-                        // Mapeamento de Parâmetros
-                        cmd.Parameters.AddWithValue("@Estados", oestado.Estado);
-                        cmd.Parameters.AddWithValue("@UF", oestado.Uf);
-                        cmd.Parameters.AddWithValue("@idPais", oestado.Opais.Codigo);
+                        cmd.Parameters.AddWithValue("@id", est.Codigo);
+                        int linhas = cmd.ExecuteNonQuery();
 
-                        // O parâmetro @Codigo é essencial para o UPDATE e é ignorado no INSERT
-                        cmd.Parameters.AddWithValue("@Codigo", oestado.Codigo);
-
-                        // 1. Executa o INSERT ou UPDATE
-                        cmd.ExecuteNonQuery();
-
-                        // 2. Captura o ID gerado (APENAS na Inserção)
-                        if (oestado.Codigo == 0)
-                        {
-                            // Reutilizamos o "cmd" e a conexão para buscar o ID gerado (SCOPE_IDENTITY é o mais seguro)
-                            cmd.CommandText = "SELECT SCOPE_IDENTITY()";
-
-                            // ExecuteScalar retorna o ID gerado
-                            object resultado = cmd.ExecuteScalar();
-
-                            if (resultado != null && resultado != DBNull.Value)
-                            {
-                                // Converte e atribui o novo ID ao objeto
-                                oestado.Codigo = Convert.ToInt32(resultado);
-                                mOk = oestado.Codigo.ToString();
-                            }
-                            else
-                            {
-                                // Erro se o ID não for capturado
-                                throw new InvalidOperationException("Falha ao obter o ID gerado após a inserção do Estado. Verifique a configuração IDENTITY da tabela.");
-                            }
-                        }
+                        if (linhas > 0)
+                            mOk = "Registro excluído com sucesso.";
                         else
-                        {
-                            // Se for atualização, retorna o código existente
-                            mOk = oestado.Codigo.ToString();
-                        }
+                            mOk = "Registro não encontrado.";
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                // Incluído tratamento de erro robusto
-                mOk = $"ERRO ao Salvar Estado: {ex.Message}";
-                // Opcional: Você pode logar o erro aqui ou relançar a exceção.
+                catch (SqlException ex)
+                {
+                    if (ex.Number == 547)
+                    {
+                        mOk = "Não é possível excluir o Estado, pois há Cidades cadastradas vinculadas a ele.";
+                    }
+                    else
+                    {
+                        mOk = "Erro de exclusão no banco de dados: " + ex.Message;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    mOk = "Erro inesperado ao tentar excluir: " + ex.Message;
+                }
             }
 
             return mOk;
         }
 
+        public override string Salvar(object obj)
+        {
+            Estados est = (Estados)obj;
+            string msql = "";
+            string mOk = "";
+
+            using (SqlConnection cnn = Banco.Abrir())
+            {
+                if (est.Codigo == 0)
+                {
+                    msql = "INSERT INTO estados (estados, uf, idpais, DatCad, UltAlt) " +
+                           "VALUES (@estados, @uf, @idpais, @DatCad, @UltAlt)";
+                }
+                else
+                {
+                    msql = "UPDATE estados SET estados=@estados, uf=@uf, idpais=@idpais, " +
+                           "DatCad=@DatCad, UltAlt=@UltAlt WHERE id=@Codigo";
+                }
+
+                using (SqlCommand cmd = new SqlCommand(msql, cnn))
+                {
+                    cmd.Parameters.AddWithValue("@estados", est.Estado);
+                    cmd.Parameters.AddWithValue("@uf", est.Uf);
+                    cmd.Parameters.AddWithValue("@idpais", est.Opais.Codigo);
+                    cmd.Parameters.AddWithValue("@DatCad", est.Datcad);
+                    cmd.Parameters.AddWithValue("@UltAlt", est.Ultalt);
+                    cmd.Parameters.AddWithValue("@Codigo", est.Codigo);
+
+                    cmd.ExecuteNonQuery();
+
+                    if (est.Codigo == 0)
+                    {
+                        cmd.CommandText = "SELECT @@IDENTITY";
+                        mOk = cmd.ExecuteScalar().ToString();
+                    }
+                    else
+                    {
+                        mOk = est.Codigo.ToString();
+                    }
+                }
+            }
+
+            return mOk;
+        }
+
+        public override List<Estados> Listar()
+        {
+            List<Estados> lista = new List<Estados>();
+
+            using (SqlConnection cnn = Banco.Abrir())
+            {
+                string msql = "SELECT Id, estados, uf, idpais, DatCad, UltAlt FROM estados ORDER BY estados";
+
+                using (SqlCommand cmd = new SqlCommand(msql, cnn))
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        Estados est = new Estados();
+                        est.Codigo = Convert.ToInt32(dr["Id"]);
+                        est.Estado = dr["estados"].ToString();
+                        est.Uf = dr["uf"].ToString();
+
+                        // carregar objeto Paises com o código
+                        est.Opais = new Paises
+                        {
+                            Codigo = Convert.ToInt32(dr["idpais"])
+                        };
+
+                        est.Datcad = Convert.ToDateTime(dr["DatCad"]);
+                        est.Ultalt = dr["UltAlt"] != DBNull.Value
+                            ? Convert.ToDateTime(dr["UltAlt"])
+                            : DateTime.MinValue;
+
+                        lista.Add(est);
+                    }
+                }
+            }
+
+            return lista;
+        }
+
         public override object CarregaObj(int chave)
         {
-            return null;
+            Estados est = null;
+
+            using (SqlConnection cnn = Banco.Abrir())
+            {
+                string msql = "SELECT Id, estados, uf, idpais, DatCad, UltAlt " +
+                              "FROM estados WHERE id=@id";
+
+                using (SqlCommand cmd = new SqlCommand(msql, cnn))
+                {
+                    cmd.Parameters.AddWithValue("@id", chave);
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            est = new Estados();
+                            est.Codigo = Convert.ToInt32(dr["Id"]);
+                            est.Estado = dr["estados"].ToString();
+                            est.Uf = dr["uf"].ToString();
+
+                            est.Opais = new Paises
+                            {
+                                Codigo = Convert.ToInt32(dr["idpais"])
+                            };
+
+                            est.Datcad = Convert.ToDateTime(dr["DatCad"]);
+                            est.Ultalt = dr["UltAlt"] != DBNull.Value
+                                ? Convert.ToDateTime(dr["UltAlt"])
+                                : DateTime.MinValue;
+                        }
+                    }
+                }
+            }
+
+            return est;
         }
 
         public override List<T> Pesquisar<T>(string chave)
         {
-            return null;
+            List<T> lista = new List<T>();
+
+            using (SqlConnection cnn = Banco.Abrir())
+            {
+                string msql = "SELECT Id, estados, uf, idpais, DatCad, UltAlt FROM estados " +
+                              "WHERE estados LIKE @chave ORDER BY estados";
+
+                using (SqlCommand cmd = new SqlCommand(msql, cnn))
+                {
+                    cmd.Parameters.AddWithValue("@chave", "%" + chave + "%");
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            Estados est = new Estados();
+                            est.Codigo = Convert.ToInt32(dr["Id"]);
+                            est.Estado = dr["estados"].ToString();
+                            est.Uf = dr["uf"].ToString();
+
+                            est.Opais = new Paises
+                            {
+                                Codigo = Convert.ToInt32(dr["idpais"])
+                            };
+
+                            est.Datcad = Convert.ToDateTime(dr["DatCad"]);
+                            est.Ultalt = dr["UltAlt"] != DBNull.Value
+                                ? Convert.ToDateTime(dr["UltAlt"])
+                                : DateTime.MinValue;
+
+                            lista.Add((T)(object)est);
+                        }
+                    }
+                }
+            }
+
+            return lista;
         }
     }
 }

@@ -35,7 +35,7 @@ namespace PaisesEstadosCidades
             {
                 return aLista[ind];
             }
-            throw new ArgumentException("indice fora do intervalo da lista");
+            throw new ArgumentOutOfRangeException("indice fora do intervalo da lista");
         }
 
         public virtual void Atualizar(int ind, T item)
@@ -44,7 +44,7 @@ namespace PaisesEstadosCidades
                 aLista[ind] = item; 
                 
            
-            throw new ArgumentException("indice fora do intervalo da lista");
+            throw new ArgumentOutOfRangeException("indice fora do intervalo da lista");
             
         }
 

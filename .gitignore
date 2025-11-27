@@ -2,9 +2,24 @@
 *.mdf
 *.ldf
 
-# Ignorar arquivos de usu rio do Visual Studio
+# Ignorar arquivos de usuario do Visual Studio
 *.user
+*.suo
 
 # Ignorar pastas de build
 bin/
 obj/
+
+# Ignorar pasta do Visual Studio
+.vs/
+
+# Ignorar arquivos temporários
+*.tmp
+*.bak
+*.log
+*.cache
+*.pdb
+
+# Ignorar arquivos de backup do Windows
+Thumbs.db
+desktop.ini

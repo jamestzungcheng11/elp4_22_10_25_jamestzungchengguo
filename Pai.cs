@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PaisesEstadosCidades
 {
@@ -12,26 +8,25 @@ namespace PaisesEstadosCidades
         protected DateTime datcad;
         protected DateTime ultalt;
 
-
         public Pai()
         {
             codigo = 0;
             datcad = DateTime.Now;
             ultalt = DateTime.Now;
-
         }
 
-        public Pai(int codigo, DateTime datcad, DateTime ultal)
+        public Pai(int codigo, DateTime datcad, DateTime ultalt)
         {
             this.codigo = codigo;
             this.datcad = datcad;
             this.ultalt = ultalt;
         }
-        
-        public Pai(int codigo,DateTime datcad)
+
+        public Pai(int codigo, DateTime datcad)
         {
             this.codigo = codigo;
             this.datcad = datcad;
+            this.ultalt = DateTime.Now;
         }
 
         public int Codigo
@@ -39,16 +34,17 @@ namespace PaisesEstadosCidades
             get => codigo;
             set => codigo = value;
         }
+
         public DateTime Datcad
         {
             get => datcad;
             set => datcad = value;
         }
+
         public DateTime Ultalt
         {
             get => ultalt;
-            set => Ultalt = value;
+            set => ultalt = value;
         }
     }
-        
 }

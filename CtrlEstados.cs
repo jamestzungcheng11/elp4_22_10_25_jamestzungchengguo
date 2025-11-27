@@ -1,38 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PaisesEstadosCidades
 {
-    class CtrlEstados : Controller<Estados>
+    internal class CtrlEstados : Controller<Estados>
     {
-        ColecoesEstados aColEstados;
-        DaoEstados aDaoestados;
-        ColecoesPaises acolpais;
-  
-   
+        ColecoesEstados acolEstados;
+        DaoEstados aDaoEstados;
 
         public CtrlEstados()
         {
-            aColEstados = new ColecoesEstados();
-            aDaoestados = new DaoEstados();
+            acolEstados = new ColecoesEstados();
+            aDaoEstados = new DaoEstados();
         }
-
-
 
         public override string Salvar(object obj)
         {
-
-            return aDaoestados.Salvar(obj);
-
-
-
-
-
+            return aDaoEstados.Salvar(obj);
         }
 
+        public override List<Estados> Listar()
+        {
+            return aDaoEstados.Listar();
+        }
 
+        public override string Excluir(object obj)
+        {
+            return aDaoEstados.Excluir(obj);
+        }
+
+        public override object CarregaObj(int chave)
+        {
+            return aDaoEstados.CarregaObj(chave);
+        }
+
+        public override List<T> Pesquisar<T>(string chave)
+        {
+            return aDaoEstados.Pesquisar<T>(chave);
+        }
     }
 }

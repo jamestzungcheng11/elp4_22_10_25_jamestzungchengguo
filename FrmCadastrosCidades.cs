@@ -38,6 +38,7 @@ namespace PaisesEstadosCidades
 
             
             ocidades.Ddd = txtDdd.Text;
+            MessageBox.Show(aCtrlCidades.Salvar(ocidades));
 
             //aCtrl.Salvar(ocidades);
             
@@ -53,7 +54,26 @@ namespace PaisesEstadosCidades
 
 
         }
-    
+        //public override void Salvar()
+        //{
+            //if(MessageDlg("Confirma(S/N)="S)
+
+
+
+            //opais.Codigo = Convert.ToInt32(txtCodigo.Text);
+
+            //opais.Pais = txtPais.Text;
+            //opais.Sigla = txtSigla.Text;
+            //opais.Ddi = txtDdi.Text;
+            //opais.Moeda = txtMoeda.Text;
+            //MessageBox.Show(aCtrlPaises.Salvar(opais));
+
+
+            //aCtrl.Salvar(opais);
+
+        //}
+
+
 
         public override void CarregaTxt()
         {

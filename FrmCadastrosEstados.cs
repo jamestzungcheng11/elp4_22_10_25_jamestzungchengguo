@@ -33,9 +33,9 @@ namespace PaisesEstadosCidades
             oEstado.Estado = txtEstado.Text;
             oEstado.Uf=txtUF.Text;
             oEstado.Opais.Pais = txtPais.Text;
-            
+            MessageBox.Show(aCtrlEstados.Salvar(oEstado));
 
-            
+
         }
 
         
