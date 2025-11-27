@@ -9,11 +9,22 @@ namespace PaisesEstadosCidades
     {
         public override string Excluir(object obj)
         {
+<<<<<<< HEAD
             Estados est = (Estados)obj;
+=======
+            return null;
+        }
+
+        public override string Salvar(object obj)
+        {
+            Estados oestado = (Estados)obj;
+            string msql;
+>>>>>>> 83455dc513d6e565479f5a81d64ad804a003bedd
             string mOk = "";
 
             using (SqlConnection cnn = Banco.Abrir())
             {
+<<<<<<< HEAD
                 try
                 {
                     string msql = "DELETE FROM estados WHERE id=@id";
@@ -43,6 +54,40 @@ namespace PaisesEstadosCidades
                 {
                     mOk = "Erro inesperado ao tentar excluir: " + ex.Message;
                 }
+=======
+                if (oestado.Codigo == 0)
+                {
+                    msql = @"INSERT INTO estados (estados, uf, idpais)
+                             VALUES (@estados, @uf, @idpais);
+                             SELECT SCOPE_IDENTITY();";
+                }
+                else
+                {
+                    msql = @"UPDATE estados 
+                             SET estados=@estados, uf=@uf, idpais=@idpais, UltAlt=GETDATE()
+                             WHERE Id=@Id;";
+                }
+
+                using (SqlCommand cmd = new SqlCommand(msql, cnn))
+                {
+                    cmd.Parameters.AddWithValue("@estados", oestado.Estado);
+                    cmd.Parameters.AddWithValue("@uf", oestado.Uf);
+                    cmd.Parameters.AddWithValue("@idpais", oestado.Opais.Codigo);
+                    cmd.Parameters.AddWithValue("@Id", oestado.Codigo);
+
+                    if (oestado.Codigo == 0)
+                    {
+                        object result = cmd.ExecuteScalar();
+                        if (result != null)
+                            mOk = result.ToString();
+                    }
+                    else
+                    {
+                        cmd.ExecuteNonQuery();
+                        mOk = oestado.Codigo.ToString();
+                    }
+                }
+>>>>>>> 83455dc513d6e565479f5a81d64ad804a003bedd
             }
 
             return mOk;

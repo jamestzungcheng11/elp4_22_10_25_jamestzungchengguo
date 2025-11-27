@@ -16,7 +16,7 @@ namespace PaisesEstadosCidades
 
 		Cidades ocidades;
         CtrlCidades aCtrlCidades;
-
+        CtrlEstados aCtrlEstados;
 
 
 		public FrmCadastrosCidades()
@@ -142,7 +142,7 @@ namespace PaisesEstadosCidades
         {
             string btnasair = ofrmConsultaEstados.btnSair.Text;
             ofrmConsultaEstados.btnSair.Text = "selecionar";
-            ofrmConsultaEstados.ConhecaObj(ocidades.Oestados, aCtrlCidades);
+            ofrmConsultaEstados.ConhecaObj(ocidades.Oestados, aCtrlEstados);
             ofrmConsultaEstados.ShowDialog();
             this.txtCodEstados.Text = Convert.ToString(ocidades.Oestados.Codigo);
             this.txtEstados.Text = ocidades.Oestados.Estado.ToString();

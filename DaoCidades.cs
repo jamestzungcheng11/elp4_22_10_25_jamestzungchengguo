@@ -54,6 +54,7 @@ namespace PaisesEstadosCidades
             {
                 if (ocidade.Codigo == 0)
                 {
+<<<<<<< HEAD
                     msql = @"INSERT INTO cidades 
                                 (cidade, ddd, idestado, DatCad, UltAlt)
                              VALUES
@@ -68,6 +69,15 @@ namespace PaisesEstadosCidades
                                 DatCad=@DatCad, 
                                 UltAlt=@UltAlt
                              WHERE Id=@Codigo";
+=======
+                    msql = "INSERT INTO cidades (cidade, ddd, idestado, DatCad, UltAlt) " +
+                           "VALUES (@cidade, @ddd, @idestado, @DatCad, @UltAlt)";
+                }
+                else
+                {
+                    msql = "UPDATE cidades SET cidade=@cidade, ddd=@ddd, idestado=@idestado," +
+                           "DatCad=@DatCad, UltAlt=@UltAlt WHERE Codigo=@Codigo";
+>>>>>>> 83455dc513d6e565479f5a81d64ad804a003bedd
                 }
 
                 using (SqlCommand cmd = new SqlCommand(msql, cnn))
